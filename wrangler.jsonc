@@ -1,0 +1,33 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "pokecode-discord-bot",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-11-09",
+	"kv_namespaces": [
+		{
+			"binding": "KV",
+			"id": "992d2f8a71614989bf2a48b8eba1956c",
+			"remote": true
+		}
+	],
+	"observability": {
+		"enabled": true,
+		"logs": {
+			"enabled": true
+		},
+		"traces": {
+			"enabled": true
+		}
+	},
+	"preview_urls": false,
+	"r2_buckets": [
+		{
+			"bucket_name": "pokecode-backups",
+			"binding": "BACKUPS",
+			"remote": true
+		}
+	],
+	"triggers": {
+		"crons": ["0 0 * * *"]
+	}
+}

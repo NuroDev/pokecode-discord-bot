@@ -1,0 +1,94 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.5/schema.json",
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on",
+				"recommended": true
+			}
+		}
+	},
+	"files": {
+		"includes": [
+			"**/*.json",
+			"**/*.jsonc",
+			"**/*.yml",
+			"**/*.ts",
+			"**/*.tsx",
+			"!**/dist/**/*",
+			"!**/node_modules/**/*",
+			"!**/worker-configuration.d.ts"
+		]
+	},
+	"formatter": {
+		"attributePosition": "multiline",
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"lineEnding": "lf",
+		"lineWidth": 90
+	},
+	"javascript": {
+		"formatter": {
+			"arrowParentheses": "always",
+			"attributePosition": "multiline",
+			"bracketSameLine": true,
+			"bracketSpacing": true,
+			"enabled": true,
+			"jsxQuoteStyle": "single",
+			"quoteStyle": "single",
+			"semicolons": "always"
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"a11y": {},
+			"complexity": {},
+			"correctness": {
+				// "all": true
+			},
+			"nursery": {
+				"useSortedClasses": {
+					"fix": "safe",
+					"level": "warn",
+					"options": {}
+				}
+			},
+			"performance": {},
+			"recommended": true,
+			"security": {},
+			"style": {
+				"noDefaultExport": "off",
+				"noInferrableTypes": "error",
+				"noParameterAssign": "error",
+				"noUnusedTemplateLiteral": "error",
+				"noUselessElse": "error",
+				"useArrayLiterals": "off",
+				"useAsConstAssertion": "error",
+				"useBlockStatements": "off",
+				"useConsistentArrayType": {
+					"level": "warn",
+					"options": {
+						"syntax": "generic"
+					}
+				},
+				"useDefaultParameterLast": "error",
+				"useEnumInitializers": "error",
+				"useFilenamingConvention": "off",
+				"useNamingConvention": "off",
+				"useNumberNamespace": "error",
+				"useSelfClosingElements": "error",
+				"useSingleVarDeclarator": "error"
+			},
+			"suspicious": {
+				"noArrayIndexKey": "off"
+			}
+		}
+	},
+	"vcs": {
+		"clientKind": "git",
+		"defaultBranch": "main",
+		"enabled": true
+	}
+}
