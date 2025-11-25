@@ -103,7 +103,6 @@ const app = new Hono<{
 
 		switch (subcommandOption.name) {
 			case SUBCOMMAND.LIST: {
-				console.log('Handling LIST subcommand');
 				const codes = await c.env.KV.get<Array<CodeEntry>>(
 					[KEY_PREFIX, serverId, targetUserId].join('/'),
 					{
