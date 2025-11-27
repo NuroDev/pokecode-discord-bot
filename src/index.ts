@@ -105,11 +105,10 @@ const app = new Hono<{
 			case SUBCOMMAND.LIST: {
 				const selectedUserId = subcommandOption.options?.find(
 					(opt) => opt.name === 'user',
-				);
-				console.log({ selectedUserId });
+				)?.value as string;
 
 				const codes = await c.env.KV.get<Array<CodeEntry>>(
-					[KEY_PREFIX, serverId, targetUserId].join('/'),
+					[KEY_PREFIX, serverId, selectedUserId ?? targetUserId].join('/'),
 					{
 						type: 'json',
 					},
