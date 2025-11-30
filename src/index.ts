@@ -11,7 +11,7 @@ import { bearerAuth } from 'hono/bearer-auth';
 
 import { COMMAND_NAME, KEY_PREFIX, SUBCOMMAND } from '~/constants';
 import type { CodeEntry } from '~/types';
-import { backup } from '~/utils/backup';
+import { backup, pruneBackups } from '~/utils/backup';
 import { ScheduleController } from '~/utils/scheduled';
 
 const app = new Hono<{
@@ -227,6 +227,7 @@ const scheduled = new ScheduleController().handler(
 	async (c) => {
 		console.log('Running scheduled task to backup codes.');
 		c.executionCtx.waitUntil(backup(c.env));
+		c.executionCtx.waitUntil(pruneBackups(c.env));
 	},
 );
 
