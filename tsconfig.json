@@ -36,7 +36,7 @@
 
 		/* Skip type checking all .d.ts files. */
 		"skipLibCheck": true,
-		"types": ["./worker-configuration.d.ts"],
+		"types": ["./.cloudflare/types/index.d.ts"],
 
 		/* Import path aliases */
 		"baseUrl": ".",
@@ -44,5 +44,10 @@
 			"~/*": ["./src/*"]
 		}
 	},
-	"include": ["worker-configuration.d.ts", "src/**/*.ts"]
+	"include": [
+		".cloudflare/types",
+		"cloudflare.config.ts",
+		"src/**/*.ts",
+		"vite.config.ts"
+	]
 }

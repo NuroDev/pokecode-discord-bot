@@ -10,7 +10,7 @@ PokeCode is a Discord bot built on Cloudflare Workers that allows users to store
 
 ### Development Server
 ```bash
-bun dev                 # Start local development server with wrangler (includes --test-scheduled flag for cron testing)
+bun dev                 # Start cf dev, cron testing uses /cdn-cgi/local/scheduled
 ```
 
 ### Code Quality
@@ -18,6 +18,8 @@ bun dev                 # Start local development server with wrangler (includes
 bun check              # Run biome check (lint + format)
 bun lint               # Run biome lint with auto-fix
 bun format             # Run biome format with auto-write
+bun run typecheck      # Check TypeScript after bun run cf-typegen
+bun run build          # Build the Worker without deploying
 ```
 
 ### Deployment
@@ -81,7 +83,8 @@ The backup system uses a custom `ScheduleController` utility (src/utils/schedule
 - `src/utils/backup.ts` - Backup utility function that exports all KV data to R2
 - `src/utils/scheduled.ts` - ScheduleController class for managing cron jobs
 - `scripts/register.ts` - Discord command registration script (uses discord.js REST API)
-- `wrangler.jsonc` - Cloudflare Worker configuration with KV binding, R2 bucket, and cron triggers
+- `cloudflare.config.ts` - Cloudflare Worker configuration with bindings and cron triggers
+- `vite.config.ts` - Vite bundler settings and Cloudflare plugin used by cf
 - `biome.jsonc` - Code formatting and linting rules
 
 ## Code Style
@@ -105,7 +108,9 @@ DISCORD_CLIENT_ID="your_discord_client_id"
 DISCORD_PUBLIC_KEY="your_public_key_here"
 ```
 
-For production, set these in Cloudflare Workers dashboard or via wrangler secrets.
+For production, set `BACKUP_AUTH_TOKEN` and `DISCORD_PUBLIC_KEY` in the Cloudflare
+Workers dashboard or upload them with `bun run cf deploy --secrets-file <path>`.
+`DISCORD_BOT_TOKEN` and `DISCORD_CLIENT_ID` are only needed by `bun register`.
 
 ## Cloudflare Bindings
 
@@ -123,6 +128,6 @@ Access bindings in code via `c.env.KV` and `c.env.BACKUPS` (Hono context).
 
 ## Observability
 
-The worker has observability enabled in `wrangler.jsonc`:
+The worker has observability enabled in `cloudflare.config.ts`:
 - Logs enabled
 - Traces enabled

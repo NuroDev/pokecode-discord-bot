@@ -29,6 +29,7 @@
 ## Prerequisites
 
 - [Bun](https://bun.sh/) installed
+- Node.js 22.12 or later for the Cloudflare CLI (`cf`) and Vite
 - A [Discord Application](https://discord.com/developers/applications) with bot enabled
 - A [Cloudflare account](https://dash.cloudflare.com/) with Workers access
 
@@ -43,6 +44,7 @@
 2. **Install dependencies**
    ```bash
    bun install
+   bun run cf-typegen
    ```
 
 3. **Configure environment variables**
@@ -71,7 +73,17 @@ Start the local development server:
 bun dev
 ```
 
-The bot will be available at `http://localhost:8787`. Configure this URL as your Discord bot's Interactions Endpoint URL during development (you may need to use a tunnel like ngrok).
+The bot will be available at `http://localhost:5173`. Configure this URL as your Discord bot's Interactions Endpoint URL during development (you may need to use a tunnel like ngrok).
+
+The scripts use the [Cloudflare CLI (`cf`)](https://developers.cloudflare.com/cf/).
+Worker settings, bindings, and the daily backup cron are in `cloudflare.config.ts`.
+`cf` uses Vite and the Cloudflare Vite plugin to bundle this TypeScript Worker,
+with build settings in `vite.config.ts`. Development and builds regenerate Worker types.
+The Worker enables `nodejs_compat` for the Discord interaction library's crypto import.
+
+KV and R2 bindings access the existing remote resources during development.
+To test the scheduled handler, visit `http://localhost:5173/cdn-cgi/local/scheduled?cron=0+0+*+*+*`.
+This runs the backup and pruning jobs against those resources.
 
 ### Code Quality Commands
 
@@ -79,14 +91,29 @@ The bot will be available at `http://localhost:8787`. Configure this URL as your
 bun check              # Run linting and formatting checks
 bun lint               # Auto-fix linting issues
 bun format             # Auto-format code
+bun run cf-typegen     # Generate Worker types in .cloudflare/types
+bun run typecheck      # Check TypeScript (generate types first)
+bun run build          # Build without deploying
 ```
 
 ## Deployment
 
 Deploy to Cloudflare Workers:
 ```bash
+bun run cf auth login
 bun deploy
 ```
+
+Validate deployment without uploading:
+```bash
+bun run cf deploy --dry-run
+```
+
+For a new Worker, set `BACKUP_AUTH_TOKEN` and `DISCORD_PUBLIC_KEY` in the
+Cloudflare dashboard before deployment, or upload a file containing those two
+secrets with `bun run cf deploy --secrets-file <path>`. Existing deployed secrets
+are preserved. `DISCORD_BOT_TOKEN` and `DISCORD_CLIENT_ID` are used only by the
+local command registration script.
 
 After deployment, update your Discord bot's Interactions Endpoint URL in the Discord Developer Portal to your Cloudflare Worker URL (e.g., `https://your-worker.your-subdomain.workers.dev/interactions`).
 
