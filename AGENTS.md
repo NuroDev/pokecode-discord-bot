@@ -134,6 +134,7 @@ Workers dashboard or upload them with `pnpm exec cf deploy --secrets-file <path>
 - Binding name: `KV`
 - Remote binding enabled (can access production KV during dev)
 - Namespace ID: `992d2f8a71614989bf2a48b8eba1956c`
+- Previews use `pokecode-preview-data`, namespace ID: `5f07668edfd342ddb02430c7df143f72`
 
 ### R2 Bucket
 

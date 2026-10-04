@@ -141,9 +141,9 @@ pnpm preview                 # Preview name defaults to the current branch
 pnpm preview my-feature      # Or use an explicit name
 ```
 
-The Preview KV namespace ID is omitted from `cloudflare.config.ts`. The pinned `cf` beta currently skips ID-less KV bindings when uploading Previews, so configure a separate `KV` binding in the Worker's Previews Base configuration in the Cloudflare dashboard before deploying.
+The Preview `KV` binding uses the `pokecode-preview-data` namespace, already created and configured in `cloudflare.config.ts`.
 
-Set `BACKUP_AUTH_TOKEN` and `DISCORD_PUBLIC_KEY` in the Previews Base configuration before the first Preview. Use a separate Discord application for Preview interactions and its public key. All branches share the Base KV namespace and Preview R2 bucket; production storage is separate. Preview deployments require Cloudflare credentials and upload immediately.
+Set `BACKUP_AUTH_TOKEN` and `DISCORD_PUBLIC_KEY` in the Previews Base configuration before the first Preview. Use a separate Discord application for Preview interactions and its public key. All branches share the Preview KV namespace and R2 bucket; production storage is separate. Preview deployments require Cloudflare credentials and upload immediately.
 
 ## Usage
 

@@ -10,15 +10,15 @@ export default defineConfig((ctx) => ({
 		env: {
 			BACKUPS: bindings.r2({
 				dev: { remote: true },
-				name: ctx.isPreview
-					? `${PROJECT_NAME}-preview-backups`
-					: `${PROJECT_NAME}-backups`,
+				name: `${PROJECT_NAME}${ctx.isPreview ? '-preview' : ''}-backups`,
 			}),
 			BACKUP_AUTH_TOKEN: bindings.secret(),
 			DISCORD_PUBLIC_KEY: bindings.secret(),
 			KV: bindings.kv({
 				dev: { remote: true },
-				id: ctx.isPreview ? undefined : '992d2f8a71614989bf2a48b8eba1956c',
+				id: ctx.isPreview
+					? '5f07668edfd342ddb02430c7df143f72'
+					: '992d2f8a71614989bf2a48b8eba1956c',
 			}),
 		},
 		name: `${PROJECT_NAME}-discord-bot`,
