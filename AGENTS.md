@@ -11,7 +11,7 @@ PokeCode is a Discord bot built on Cloudflare Workers that allows users to store
 ### Development Server
 
 ```bash
-pnpm dev                 # Start cf dev, cron testing uses /cdn-cgi/local/scheduled
+pnpm dev                 # Start vp dev, cron testing uses /cdn-cgi/local/scheduled
 ```
 
 ### Code Quality
@@ -29,6 +29,7 @@ pnpm build          # Build the Worker without deploying
 ```bash
 pnpm register           # Register Discord slash commands (requires DISCORD_CLIENT_ID and DISCORD_BOT_TOKEN env vars)
 pnpm deploy             # Deploy to Cloudflare Workers
+pnpm deploy:preview     # Deploy the current branch as a Worker Preview
 pnpm cf-typegen     # Generate Cloudflare Worker types
 ```
 

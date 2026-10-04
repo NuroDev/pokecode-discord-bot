@@ -80,7 +80,7 @@ pnpm dev
 
 The bot will be available at `http://localhost:5173`. Configure this URL as your Discord bot's Interactions Endpoint URL during development (you may need to use a tunnel like ngrok).
 
-The scripts use the [Cloudflare CLI (`cf`)](https://developers.cloudflare.com/cf/).
+Build and development scripts use Vite Plus; deployment and type generation use the [Cloudflare CLI (`cf`)](https://developers.cloudflare.com/cf/).
 Worker settings, bindings, and the daily backup cron are in `cloudflare.config.ts`.
 `cf` uses Vite and the Cloudflare Vite plugin to bundle this TypeScript Worker,
 with build, Oxfmt, and Oxlint settings in `vite.config.ts`. Development and builds regenerate Worker types.
@@ -137,8 +137,8 @@ pnpm exec cf r2 buckets create --name pokecode-preview-backups
 Deploy a Preview:
 
 ```bash
-pnpm preview                 # Preview name defaults to the current branch
-pnpm preview my-feature      # Or use an explicit name
+pnpm deploy:preview                 # Preview name defaults to the current branch
+pnpm deploy:preview my-feature      # Or use an explicit name
 ```
 
 The Preview `KV` binding uses the `pokecode-preview-data` namespace, already created and configured in `cloudflare.config.ts`.
