@@ -147,5 +147,6 @@ Access bindings in code via `c.env.KV` and `c.env.BACKUPS` (Hono context).
 
 The worker has observability enabled in `cloudflare.config.ts`:
 
+- Issues enabled
 - Logs enabled
 - Traces enabled

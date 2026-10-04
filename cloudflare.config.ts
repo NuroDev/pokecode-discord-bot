@@ -30,6 +30,7 @@ export default defineConfig(({ isPreview }) => {
 			name: 'pokecode-discord-bot',
 			observability: {
 				enabled: true,
+				issues: { enabled: true },
 				logs: { enabled: true },
 				traces: { enabled: true },
 			},
