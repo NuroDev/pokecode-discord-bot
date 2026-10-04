@@ -10,7 +10,7 @@ export default defineConfig(({ isPreview }) => {
 
 	return {
 		worker: {
-			compatibilityDate: '2025-11-09',
+			compatibilityDate: '2026-10-04',
 			compatibilityFlags: ['nodejs_compat'],
 			entrypoint: 'src/index.ts',
 			env: {
