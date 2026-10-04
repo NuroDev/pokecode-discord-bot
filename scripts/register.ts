@@ -1,9 +1,7 @@
-/// <reference types="@types/bun" />
-
 import { REST, Routes, SlashCommandBuilder } from 'discord.js';
 import { z } from 'zod';
 
-import { COMMAND_NAME, SUBCOMMAND } from '../src/constants';
+import { COMMAND_NAME, SUBCOMMAND } from '../src/constants.ts';
 
 const env = await z
 	.object({

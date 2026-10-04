@@ -23,12 +23,12 @@
 - **Discord API**: [discord-interactions](https://github.com/discord/discord-interactions-js)
 - **Storage**: Cloudflare KV
 - **Language**: TypeScript
-- **Package Manager**: Bun
-- **Code Quality**: Biome
+- **Package Manager**: pnpm 12.9.1
+- **Code Quality**: Vite Plus (Oxfmt / Oxlint)
 
 ## Prerequisites
 
-- [Bun](https://bun.sh/) installed
+- [pnpm 12.9.1](https://pnpm.io/) installed
 - Node.js 22.12 or later for the Cloudflare CLI (`cf`) and Vite
 - A [Discord Application](https://discord.com/developers/applications) with bot enabled
 - A [Cloudflare account](https://dash.cloudflare.com/) with Workers access
@@ -36,41 +36,46 @@
 ## Setup
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/nurodev/pokecode-discord-bot.git
-   cd pokecode-discord-bot
-   ```
+
+    ```bash
+    git clone https://github.com/nurodev/pokecode-discord-bot.git
+    cd pokecode-discord-bot
+    ```
 
 2. **Install dependencies**
-   ```bash
-   bun install
-   bun run cf-typegen
-   ```
+
+    ```bash
+    pnpm install
+    pnpm cf-typegen
+    ```
 
 3. **Configure environment variables**
 
-   Create a `.env` file in the root directory:
-   ```
-   BACKUP_AUTH_TOKEN="your_backup_auth_token"
-   DISCORD_BOT_TOKEN="your_discord_bot_token"
-   DISCORD_CLIENT_ID="your_discord_client_id"
-   DISCORD_PUBLIC_KEY="your_discord_public_key"
-   ```
+    Create a `.env` file in the root directory:
 
-   Get your Discord public key from the [Discord Developer Portal](https://discord.com/developers/applications).
+    ```
+    BACKUP_AUTH_TOKEN="your_backup_auth_token"
+    DISCORD_BOT_TOKEN="your_discord_bot_token"
+    DISCORD_CLIENT_ID="your_discord_client_id"
+    DISCORD_PUBLIC_KEY="your_discord_public_key"
+    ```
+
+    Get your Discord public key from the [Discord Developer Portal](https://discord.com/developers/applications).
 
 4. **Register Discord commands**
 
-   Run the `register` script to register the bot's slash commands with Discord:
-   ```bash
-   bun run register
-   ```
+    Run the `register` script to register the bot's slash commands with Discord:
+
+    ```bash
+    pnpm register
+    ```
 
 ## Development
 
 Start the local development server:
+
 ```bash
-bun dev
+pnpm dev
 ```
 
 The bot will be available at `http://localhost:5173`. Configure this URL as your Discord bot's Interactions Endpoint URL during development (you may need to use a tunnel like ngrok).
@@ -78,7 +83,7 @@ The bot will be available at `http://localhost:5173`. Configure this URL as your
 The scripts use the [Cloudflare CLI (`cf`)](https://developers.cloudflare.com/cf/).
 Worker settings, bindings, and the daily backup cron are in `cloudflare.config.ts`.
 `cf` uses Vite and the Cloudflare Vite plugin to bundle this TypeScript Worker,
-with build settings in `vite.config.ts`. Development and builds regenerate Worker types.
+with build, Oxfmt, and Oxlint settings in `vite.config.ts`. Development and builds regenerate Worker types.
 The Worker enables `nodejs_compat` for the Discord interaction library's crypto import.
 
 KV and R2 bindings access the existing remote resources during development.
@@ -88,30 +93,32 @@ This runs the backup and pruning jobs against those resources.
 ### Code Quality Commands
 
 ```bash
-bun check              # Run linting and formatting checks
-bun lint               # Auto-fix linting issues
-bun format             # Auto-format code
-bun run cf-typegen     # Generate Worker types in .cloudflare/types
-bun run typecheck      # Check TypeScript (generate types first)
-bun run build          # Build without deploying
+pnpm check              # Run linting and formatting checks
+pnpm lint               # Auto-fix linting issues
+pnpm format             # Auto-format code
+pnpm cf-typegen     # Generate Worker types in .cloudflare/types
+pnpm typecheck      # Check TypeScript (generate types first)
+pnpm build          # Build without deploying
 ```
 
 ## Deployment
 
 Deploy to Cloudflare Workers:
+
 ```bash
-bun run cf auth login
-bun deploy
+pnpm exec cf auth login
+pnpm deploy
 ```
 
 Validate deployment without uploading:
+
 ```bash
-bun run cf deploy --dry-run
+pnpm exec cf deploy --dry-run
 ```
 
 For a new Worker, set `BACKUP_AUTH_TOKEN` and `DISCORD_PUBLIC_KEY` in the
 Cloudflare dashboard before deployment, or upload a file containing those two
-secrets with `bun run cf deploy --secrets-file <path>`. Existing deployed secrets
+secrets with `pnpm exec cf deploy --secrets-file <path>`. Existing deployed secrets
 are preserved. `DISCORD_BOT_TOKEN` and `DISCORD_CLIENT_ID` are used only by the
 local command registration script.
 
@@ -126,11 +133,13 @@ The bot provides a single `/code` command with three subcommands:
 ```
 /code list
 ```
+
 Displays all your saved codes for the current server.
 
 ```
 /code list user:<@user>
 ```
+
 Displays all saved codes for the mentioned user in the current server.
 
 ### Add a code
@@ -138,6 +147,7 @@ Displays all saved codes for the mentioned user in the current server.
 ```
 /code add name:<label> code:<your-code>
 ```
+
 Adds a new code with a custom label. Duplicate names are not allowed.
 
 ### Remove a code
@@ -145,6 +155,7 @@ Adds a new code with a custom label. Duplicate names are not allowed.
 ```
 /code remove name:<label>
 ```
+
 Removes a code by its label.
 
 ## Storage
@@ -158,7 +169,7 @@ Each user's codes are isolated per Discord server.
 
 ## Contributing
 
-This project uses Biome for code formatting and linting. Please run `bun check` before committing changes to ensure code quality standards are met.
+This project uses Vite Plus for code formatting and linting. Please run `pnpm check` before committing changes to ensure code quality standards are met.
 
 ## License
 

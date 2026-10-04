@@ -9,38 +9,45 @@ PokeCode is a Discord bot built on Cloudflare Workers that allows users to store
 ## Development Commands
 
 ### Development Server
+
 ```bash
-bun dev                 # Start cf dev, cron testing uses /cdn-cgi/local/scheduled
+pnpm dev                 # Start cf dev, cron testing uses /cdn-cgi/local/scheduled
 ```
 
 ### Code Quality
+
 ```bash
-bun check              # Run biome check (lint + format)
-bun lint               # Run biome lint with auto-fix
-bun format             # Run biome format with auto-write
-bun run typecheck      # Check TypeScript after bun run cf-typegen
-bun run build          # Build the Worker without deploying
+pnpm check              # Run vp check (format + lint + types)
+pnpm lint               # Run vp lint with auto-fix
+pnpm format             # Run vp fmt
+pnpm typecheck      # Check TypeScript after pnpm cf-typegen
+pnpm build          # Build the Worker without deploying
 ```
 
 ### Deployment
+
 ```bash
-bun register           # Register Discord slash commands (requires DISCORD_CLIENT_ID and DISCORD_BOT_TOKEN env vars)
-bun deploy             # Deploy to Cloudflare Workers
-bun run cf-typegen     # Generate Cloudflare Worker types
+pnpm register           # Register Discord slash commands (requires DISCORD_CLIENT_ID and DISCORD_BOT_TOKEN env vars)
+pnpm deploy             # Deploy to Cloudflare Workers
+pnpm cf-typegen     # Generate Cloudflare Worker types
 ```
 
 ### Environment Variables
+
 Set these environment variables for registration:
+
 - `DISCORD_CLIENT_ID` - Your Discord application's client ID
 - `DISCORD_BOT_TOKEN` - Your Discord bot token
 
 The worker requires (in `.env` or Cloudflare dashboard):
+
 - `DISCORD_PUBLIC_KEY` - For verifying Discord interaction requests (discord-interactions)
 - `BACKUP_AUTH_TOKEN` - Bearer token for authenticating backup endpoint requests
 
 ## Architecture
 
 ### Request Flow
+
 1. Discord sends interaction requests to the `POST /interactions` endpoint
 2. Middleware verifies request signature using Ed25519 (discord-interactions)
 3. PING interactions return PONG (required for Discord verification)
@@ -48,27 +55,33 @@ The worker requires (in `.env` or Cloudflare dashboard):
 5. Data is stored/retrieved from Cloudflare KV with key pattern: `user_codes/{serverId}/{userId}`
 
 ### Storage Schema
+
 KV stores an array of `CodeEntry` objects per user per server:
+
 ```typescript
 interface CodeEntry {
-  code: string;  // The actual game code
-  name: string;  // User-defined label
+	code: string; // The actual game code
+	name: string; // User-defined label
 }
 ```
 
 Key structure: `user_codes/{guild_id}/{user_id}`
 
 ### Command Structure
+
 The bot exposes a single `/code` slash command with three subcommands:
+
 - `/code list` - Lists all codes for the requesting user
 - `/code list user:<@user>` - Lists all codes for a mentioned user (note: command definition supports this option, but handler currently doesn't implement fetching other users' codes)
 - `/code add <name> <code>` - Adds a new code with duplicate checking (checks both name and code for duplicates)
 - `/code remove <name>` - Removes a code by name
 
-All command definitions are in `scripts/register.ts` and must be registered using `bun register` before they appear in Discord.
+All command definitions are in `scripts/register.ts` and must be registered using `pnpm register` before they appear in Discord.
 
 ### Backup System
+
 The bot includes automated backup functionality that stores KV data to Cloudflare R2:
+
 - **Scheduled backups**: Runs daily at midnight UTC via cron trigger (`0 0 * * *`)
 - **Manual backups**: POST to `/backup` endpoint with bearer authentication
 - **Storage location**: R2 bucket `pokecode-backups` (binding: `BACKUPS`)
@@ -77,6 +90,7 @@ The bot includes automated backup functionality that stores KV data to Cloudflar
 The backup system uses a custom `ScheduleController` utility (src/utils/scheduled.ts) that provides a fluent API for registering cron handlers.
 
 ### File Organization
+
 - `src/index.ts` - Main Hono app with interaction handling, business logic, backup endpoint, and scheduled task export
 - `src/constants.ts` - Shared constants (command names, KV key prefix)
 - `src/types.ts` - TypeScript interfaces (CodeEntry)
@@ -85,22 +99,23 @@ The backup system uses a custom `ScheduleController` utility (src/utils/schedule
 - `scripts/register.ts` - Discord command registration script (uses discord.js REST API)
 - `cloudflare.config.ts` - Cloudflare Worker configuration with bindings and cron triggers
 - `vite.config.ts` - Vite bundler settings and Cloudflare plugin used by cf
-- `biome.jsonc` - Code formatting and linting rules
 
 ## Code Style
 
-This project uses Biome for linting and formatting:
+This project uses Vite Plus for linting and formatting:
+
 - **Indentation**: Tabs (width 4)
 - **Line width**: 90 characters
 - **Quotes**: Single quotes for JS/TS
 - **Semicolons**: Always required
 - **Array types**: Generic syntax (`Array<T>` not `T[]`)
 
-Always run `bun check` before committing changes.
+Always run `pnpm check` before committing changes.
 
 ## Environment Configuration
 
 Create a `.env` file (gitignored) based on `.example.env`:
+
 ```
 BACKUP_AUTH_TOKEN="your_backup_auth_token"
 DISCORD_BOT_TOKEN="your_discord_bot_token"
@@ -109,17 +124,19 @@ DISCORD_PUBLIC_KEY="your_public_key_here"
 ```
 
 For production, set `BACKUP_AUTH_TOKEN` and `DISCORD_PUBLIC_KEY` in the Cloudflare
-Workers dashboard or upload them with `bun run cf deploy --secrets-file <path>`.
-`DISCORD_BOT_TOKEN` and `DISCORD_CLIENT_ID` are only needed by `bun register`.
+Workers dashboard or upload them with `pnpm exec cf deploy --secrets-file <path>`.
+`DISCORD_BOT_TOKEN` and `DISCORD_CLIENT_ID` are only needed by `pnpm register`.
 
 ## Cloudflare Bindings
 
 ### KV Namespace
+
 - Binding name: `KV`
 - Remote binding enabled (can access production KV during dev)
 - Namespace ID: `992d2f8a71614989bf2a48b8eba1956c`
 
 ### R2 Bucket
+
 - Binding name: `BACKUPS`
 - Bucket name: `pokecode-backups`
 - Remote binding enabled
@@ -129,5 +146,6 @@ Access bindings in code via `c.env.KV` and `c.env.BACKUPS` (Hono context).
 ## Observability
 
 The worker has observability enabled in `cloudflare.config.ts`:
+
 - Logs enabled
 - Traces enabled

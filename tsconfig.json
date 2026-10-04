@@ -18,6 +18,7 @@
 
 		/* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */
 		"allowJs": true,
+		"allowImportingTsExtensions": true,
 		/* Enable error reporting in type-checked JavaScript files. */
 		"checkJs": false,
 
@@ -36,10 +37,9 @@
 
 		/* Skip type checking all .d.ts files. */
 		"skipLibCheck": true,
-		"types": ["./.cloudflare/types/index.d.ts"],
+		"types": ["./.cloudflare/types/index.d.ts", "node"],
 
 		/* Import path aliases */
-		"baseUrl": ".",
 		"paths": {
 			"~/*": ["./src/*"]
 		}
@@ -47,6 +47,7 @@
 	"include": [
 		".cloudflare/types",
 		"cloudflare.config.ts",
+		"scripts/**/*.ts",
 		"src/**/*.ts",
 		"vite.config.ts"
 	]
