@@ -29,7 +29,7 @@
 ## Prerequisites
 
 - [pnpm 12.9.1](https://pnpm.io/) installed
-- Node.js 22.12 or later for the Cloudflare CLI (`cf`) and Vite
+- [Node.js 24.21.0 LTS](https://nodejs.org/) or a newer 24.x release (`.node-version` pins 24.21.0)
 - A [Discord Application](https://discord.com/developers/applications) with bot enabled
 - A [Cloudflare account](https://dash.cloudflare.com/) with Workers access
 
