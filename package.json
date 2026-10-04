@@ -11,6 +11,7 @@
 		"dev": "cf dev",
 		"format": "vp fmt",
 		"lint": "vp lint --fix",
+		"preview": "cf previews deploy",
 		"register": "node --env-file-if-exists=.env scripts/register.ts",
 		"typecheck": "vp check --no-fmt --no-lint"
 	},

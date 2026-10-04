@@ -124,6 +124,27 @@ local command registration script.
 
 After deployment, update your Discord bot's Interactions Endpoint URL in the Discord Developer Portal to your Cloudflare Worker URL (e.g., `https://your-worker.your-subdomain.workers.dev/interactions`).
 
+## Worker Previews
+
+[Worker Previews](https://developers.cloudflare.com/workers/previews/) deploy the current branch with separate storage and no scheduled backup trigger.
+
+Create the shared Preview resources once:
+
+```bash
+pnpm exec cf kv namespaces create --title pokecode-preview-codes
+pnpm exec cf r2 buckets create --name pokecode-preview-backups
+```
+
+Export the returned KV namespace ID before deploying a Preview:
+
+```bash
+export CLOUDFLARE_PREVIEW_KV_NAMESPACE_ID='<preview-namespace-id>'
+pnpm preview                 # Preview name defaults to the current branch
+pnpm preview my-feature      # Or use an explicit name
+```
+
+Set `BACKUP_AUTH_TOKEN` and `DISCORD_PUBLIC_KEY` in the Worker's Previews Base configuration in the Cloudflare dashboard before the first Preview. Use a separate Discord application for Preview interactions and its public key. All branches share the Preview KV namespace and R2 bucket; production storage is separate. Preview deployments require Cloudflare credentials and upload immediately.
+
 ## Usage
 
 The bot provides a single `/code` command with three subcommands:
